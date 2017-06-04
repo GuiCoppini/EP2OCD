@@ -20,16 +20,16 @@ public static String recupera(String a){ //Recupera a opCode da String de instru
     if(comando(a).equalsIgnoreCase("mov")){
         if(a.charAt(4) == '['){
             if(a.charAt(a.length()-1) == ']'){
-                return opCodes.get("MOV [],[]").getOp();
+              return opCodes.get("MOV [],[]").getOp();
             }
             return opCodes.get("MOV [],").getOp();
-        } else if(a.charAt(a.length() - 1) == ']'){
-            return opCodes.get("MOV ,[]").getOp();
+        }
+        else if(a.charAt(a.length() -1) == ']'){
+          return opCodes.get("MOV ,[]").getOp();
         }
     }
     Operation op = opCodes.get(comando(a));
-    if(op != null)
-    return op.getOp();
+    if(op != null) return op.getOp();
     return null;
 }
 private static String comando(String palavra){

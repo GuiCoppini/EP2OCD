@@ -10,31 +10,31 @@ public class Principal {
   boolean[] pc = new boolean[wordSize];
   Stack<String> stack = new Stack<>();
 
-  public static void main(String[] args) {
+//  public static void main(String[] args) {
     // PC Settado pra primeira linha do codigo na memoria
-    while(true) {
-      String instruction = memory.get(pc); // pega uma linha
-      Operation.execute(instruction); // le a linha
-      // pc.parseInt // pc <- pc + 1, le prox linha
-    }
-  }
+//    while(true) {
+//      String instruction = memory.get(pc); // pega uma linha
+//      Operation.execute(instruction); // le a linha
+//      pc.parseInt // pc <- pc + 1, le prox linha
+//    }
+//  }
 
-  public static boolean[] somaArrays(boolean[] a, boolean[] b) {
-    for(int i = b.length-1; i>=0; i--) {
-      boolean carry = false;
-      if (b[i] == true && a[i] == true) {
-        carry = true;
-        b[i] = false;
+  // public static boolean[] somaArrays(boolean[] a, boolean[] b) {
+  //   for(int i = b.length-1; i>=0; i--) {
+  //     boolean carry = false;
+  //     if (b[i] == true && a[i] == true) {
+  //       carry = true;
+  //       b[i] = false;
         
-      }
-      if (b[i] != a[i]) {
-        carry = false;
-        b[i] = true;
-      }
-      if (b[i] == false && a[i] == false) {
-        carry = false;
-        b[i] = false;
-      }
-    }
-  }
+  //     }
+  //     if (b[i] != a[i]) {
+  //       carry = false;
+  //       b[i] = true;
+  //     }
+  //     if (b[i] == false && a[i] == false) {
+  //       carry = false;
+  //       b[i] = false;
+  //     }
+  //   }
+  // }
 }

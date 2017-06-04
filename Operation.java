@@ -1,10 +1,9 @@
 public class Operation {
-  String opcode;
-  public Operation(String opcode) {
-    this.opcode = opcode;
-  }
-
-  public getOp(){
-    return opcode;
-  }
+    private String opCode;
+    public Operation(String opCode){
+        this.opCode = opCode;
+    }
+    public String getOp(){
+        return this.opCode;
+    }
 }
