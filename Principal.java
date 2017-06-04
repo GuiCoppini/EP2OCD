@@ -13,9 +13,9 @@ public class Principal {
   public static void main(String[] args) {
     // PC Settado pra primeira linha do codigo na memoria
     while(true) {
-      String instruction = memory.get(pc);
-      Operation.execute(instruction);
-      // pc.parseInt
+      String instruction = memory.get(pc); // pega uma linha
+      Operation.execute(instruction); // le a linha
+      // pc.parseInt // pc <- pc + 1, le prox linha
     }
   }
 
