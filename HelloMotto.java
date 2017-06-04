@@ -1,5 +1,5 @@
 
-public class Aux {
+public class HelloMotto {
     public static int[] converteString(String numero1) {
 		String conversao[] = numero1.split("");
 		int[] binario = new int[conversao.length];
