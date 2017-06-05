@@ -17,6 +17,11 @@ public class OperationCode {
 }
 
 public static String recupera(String a){ //Recupera a opCode da String de instrução
+    for(char c : a.toCharArray()){
+      if (c == '[') {
+        //NAO TERMINEI
+      }
+    }
     if(comando(a).equalsIgnoreCase("mov")){ // se for mov
         if(a.charAt(4) == '['){  // se o primeiro arg for da memoria
             if(a.charAt(a.length()-1) == ']'){ // se o segundo arg for da memoria
