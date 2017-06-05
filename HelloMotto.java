@@ -1,10 +1,12 @@
 
 public class HelloMotto {
-    public static int[] converteString(String numero1) {
+    public static boolean[] converteString(String numero1) {
 		String conversao[] = numero1.split("");
-		int[] binario = new int[conversao.length];
+		boolean[] binario = new boolean[conversao.length];
 		for (int i = 0; i < conversao.length; i++) {
-			binario[i] = Integer.parseInt(conversao[i]);
+			if(numero1.charAt(i) == '1') binario[i] = true;
+      else binario[i] = false;
+      System.out.println(binario[i]);
 		}
 		return binario;
 	}

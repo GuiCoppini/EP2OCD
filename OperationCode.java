@@ -17,16 +17,44 @@ public class OperationCode {
 }
 
 public static String recupera(String a){ //Recupera a opCode da String de instrução
-    if(comando(a).equalsIgnoreCase("mov")){
-        if(a.charAt(4) == '['){
-            if(a.charAt(a.length()-1) == ']'){
+    if(comando(a).equalsIgnoreCase("mov")){ // se for mov
+        if(a.charAt(4) == '['){  // se o primeiro arg for da memoria
+            if(a.charAt(a.length()-1) == ']'){ // se o segundo arg for da memoria
               return opCodes.get("MOV [],[]").getOp();
             }
-            return opCodes.get("MOV [],").getOp();
+            return opCodes.get("MOV [],").getOp(); // so o primeiro era da memoria
         }
-        else if(a.charAt(a.length() -1) == ']'){
+        else if(a.charAt(a.length() -1) == ']'){ // so o segundo era da memoria
           return opCodes.get("MOV ,[]").getOp();
         }
+    }
+
+    if(comando(a).equalsIgnoreCase("add")){ // ADD
+      if()
+    }
+
+    if(comando(a).equalsIgnoreCase("sub")){ // SUB
+
+    }
+
+    if(comando(a).equalsIgnoreCase("mul")){ // MUL
+
+    }
+
+    if(comando(a).equalsIgnoreCase("div")){ // DIV
+
+    }
+
+    if(comando(a).equalsIgnoreCase("inc")){ // INC
+      
+    }
+
+    if(comando(a).equalsIgnoreCase("dec")){ // DEC
+      
+    }
+
+    if(comando(a).equalsIgnoreCase("cmp")){ // CMP
+      
     }
     Operation op = opCodes.get(comando(a));
     if(op != null) return op.getOp();
