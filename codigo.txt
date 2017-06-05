@@ -1,0 +1,7 @@
+MOV asasas
+ADD gfweg
+DEC ergerg
+JMP aaa
+JE sdff
+JL ewfwef
+INC bbbb
