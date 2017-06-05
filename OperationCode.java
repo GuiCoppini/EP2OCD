@@ -2,9 +2,9 @@ import java.util.*;
 public class OperationCode {
   public static HashMap<String,Operation> opCodes = new HashMap<String,Operation>();
   static void criaMapaPadronizado() { //Cria mapa contendo as opCodes
-    String[] line = {"MOV [],","MOV ,[]","MOV","MOV [],[]","ADD","SUB","MUL","DIV","INC","DEC","CMP","JMP","JE","JNE",
+    String[] line = {"MOV","ADD","SUB","MUL","DIV","INC","DEC","CMP","JMP","JE","JNE",
                      "JG","JL","JGE","JLE","&","|"};
-    String[] opCode = {"00001","00010","00011","00100","00101","00110","00111","01000",
+    String[] opCode = {"00001","00101","00110","00111","01000",
                        "01001","01010","01011","01100","01101","01110","01111","10000","10001",
                        "10010","10011","10100"};
     int i = 0;
@@ -20,17 +20,16 @@ public static String recupera(String a){ //Recupera a opCode da String de instru
     if(comando(a).equalsIgnoreCase("mov")){ // se for mov
         if(a.charAt(4) == '['){  // se o primeiro arg for da memoria
             if(a.charAt(a.length()-1) == ']'){ // se o segundo arg for da memoria
-              return opCodes.get("MOV [],[]").getOp();
+              // TRATA QUANDO FOR MOV [ ],[ ]
             }
-            return opCodes.get("MOV [],").getOp(); // so o primeiro era da memoria
+            // TRATA QUANDO FOR MOV [ ], 
         }
         else if(a.charAt(a.length() -1) == ']'){ // so o segundo era da memoria
-          return opCodes.get("MOV ,[]").getOp();
+          // TRATA QUANDO FOR MOV ,[ ] 
         }
     }
 
     if(comando(a).equalsIgnoreCase("add")){ // ADD
-      if()
     }
 
     if(comando(a).equalsIgnoreCase("sub")){ // SUB
