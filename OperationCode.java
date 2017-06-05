@@ -16,10 +16,26 @@ public class OperationCode {
     }
 }
 
+private static List<Character> buscaConteudo(String line, int posicao){
+    // busca o conteudo dentro dos [], onde o primeiro [,está denotado pelo int posicao
+    int i = posicao + 1;
+    List<Character>conteudo = new LinkedList<Character>();
+    while(i < line.length() && line.charAt(i) != ']'){
+        conteudo.add(line.charAt(i));
+        i++;
+    }
+    return conteudo;
+}
+
+private static void adicionaAFiladeExecucao(List proximaExecuçao){
+    //metodo que recebe uma lista, contendo o conteudo dentro dos [], 
+    //e insere uma busca na fila de execuçao para a memoria
+}
 public static String recupera(String a){ //Recupera a opCode da String de instrução
-    for(char c : a.toCharArray()){
-      if (c == '[') {
-        //NAO TERMINEI
+    for(int i = 0; i < a.length();i++ ){
+      if (a.charAt(i) == '[') {
+          System.out.println(buscaConteudo(a,i).toString()); 
+         adicionaAFiladeExecucao(buscaConteudo(a, i));
       }
     }
     if(comando(a).equalsIgnoreCase("mov")){ // se for mov
