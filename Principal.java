@@ -4,13 +4,13 @@ import java.io.FileReader ;
 public class Principal {
   static int wordSize = 36; // Tamanho da palavra
   static int regsize = 16; // reg nao precisa guardar uma word toda // na memoria 5 bit pra opcode e 11 pra var // enderecos 16bits // entende numeros ate 2048 unsigned, acho q cobre o escopo do problema
-  static boolean[] ax = new boolean[regsize]; 
-  static boolean[] bx = new boolean[regsize]; 
-  static boolean[] cx = new boolean[regsize]; 
-  static boolean[] dx = new boolean[regsize]; 
+  static short ax ; // short tem tamanho 16bit e ajuda nas operacoes
+  static short bx;
+  static short cx;
+  static short dx; 
   static boolean cf, zf, sf, of;
  // static HashMap<Boolean[], String> memory = new HashMap<Boolean[], String>(); // pelo q eu pesquisei hashmap n serve aqui pq se perde a posicao
-  static String[] memoria = new String[65536]; //  cobre todos os valores do enderecamento  //pesado quase nada
+  static String[] memoria = new String[32767]; //  cobre todos os valores do enderecamento  //pesado quase nada // vlw java por n ter unsigned short
   static int pc = 0;
 /*
 You can get a binary string from an integer like so:
@@ -30,16 +30,20 @@ int iNew = Integer.parseInt(binString, 2);
 	int count = 0;
 	//while !exit
 	while(!Principal.memoria[count].substring(0,3).equals("EXI")){
+		cf = false;
+		zf = false;
+		sf = false;
+		of = false;
 	pc = count; // pc guarda o endereco da instrucao na memoria
 	Operation.executa(pc); // a magica acontece aqui
-	System.out.println("AX");
-	imprime(ax);
-	System.out.println("BX");
-	imprime(bx);
-	System.out.println("CX");
-	imprime(cx);
-	System.out.println("DX");
-	imprime(dx);
+	System.out.println("AX: "+ax);
+	//imprime(ax);
+	System.out.println("BX: "+bx);
+	//imprime(bx);
+	System.out.println("CX: "+cx);
+	//imprime(cx);
+	System.out.println("DX: "+dx);
+	//imprime(dx);
 	System.out.println("Cf:"+cf+" Zf:"+zf+" Sf:"+sf+" Of:"+of);
 	//imprime(pc);
 	System.out.println("PC: "+pc);
