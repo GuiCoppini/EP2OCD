@@ -27,9 +27,9 @@ private static List<Character> buscaConteudo(String line, int posicao){
     return conteudo;
 }
 
-private static void adicionaAFiladeExecucao(List proximaExecuçao){
+private static void adicionaAFiladeExecucao(List proximaExecucao){
     //metodo que recebe uma lista, contendo o conteudo dentro dos [], 
-    //e insere uma busca na fila de execuçao para a memoria
+    //e insere uma busca na fila de execucao para a memoria
 }
 public static String recupera(String a){ //Recupera a opCode da String de instrução
     for(int i = 0; i < a.length();i++ ){
