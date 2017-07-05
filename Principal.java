@@ -29,7 +29,7 @@ int iNew = Integer.parseInt(binString, 2);
     le_codigo_do_arquivo(); //metodo magico q n implementei, le o codigo do arq e salva na memoria, adcionar operacao EXIT no fim do codigo se
     int count = 0;
     //while !exit
-    while(!Principal.memoria[count].substring(0,3).equals("EXI")){
+    while(!Principal.memoria[count].substring(0,3).equals("EXIT")){
       cf = false;
       zf = false;
       sf = false;
