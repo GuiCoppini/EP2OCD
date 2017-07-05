@@ -7,7 +7,7 @@ public class Principal {
   static short ax ; // short tem tamanho 16bit e ajuda nas operacoes
   static short bx;
   static short cx;
-  static short dx; 
+  static short dx;
   static boolean cf, zf, sf, of;
  // static HashMap<Boolean[], String> memory = new HashMap<Boolean[], String>(); // pelo q eu pesquisei hashmap n serve aqui pq se perde a posicao
   static String[] memoria = new String[32767]; //  cobre todos os valores do enderecamento  //pesado quase nada // vlw java por n ter unsigned short
@@ -26,53 +26,53 @@ int iNew = Integer.parseInt(binString, 2);
   public static void main(String[] args) {
     // PC Settado pra primeira linha do codigo na memoria
     //"stack" do codigo cresce de cima pra baixo, stack das variaveis cresce de baixo pra cima, logo primeira linha do codigo esta em memoria[0] e a primeira var ta em memoria[memoria.length]
-	le_codigo_do_arquivo(); //metodo magico q n implementei, le o codigo do arq e salva na memoria, adcionar operacao EXIT no fim do codigo se 
-	int count = 0;
-	//while !exit
-	while(!Principal.memoria[count].substring(0,3).equals("EXI")){
-		cf = false;
-		zf = false;
-		sf = false;
-		of = false;
-	pc = count; // pc guarda o endereco da instrucao na memoria
-	Operation.executa(pc); // a magica acontece aqui
-	System.out.println("AX: "+ax);
-	//imprime(ax);
-	System.out.println("BX: "+bx);
-	//imprime(bx);
-	System.out.println("CX: "+cx);
-	//imprime(cx);
-	System.out.println("DX: "+dx);
-	//imprime(dx);
-	System.out.println("Cf:"+cf+" Zf:"+zf+" Sf:"+sf+" Of:"+of);
-	//imprime(pc);
-	System.out.println("PC: "+pc);
-	System.out.println("Endereco da instrucao eh: "+count);
-	System.out.println("/////////////////////////////////////////////////////////////////");
-	count++;
-	}
+  le_codigo_do_arquivo(); //metodo magico q n implementei, le o codigo do arq e salva na memoria, adcionar operacao EXIT no fim do codigo se
+  int count = 0;
+  //while !exit
+  while(!Principal.memoria[count].substring(0,3).equals("EXI")){
+    cf = false;
+    zf = false;
+    sf = false;
+    of = false;
+    pc = count; // pc guarda o endereco da instrucao na memoria
+    Operation.executa(pc); // a magica acontece aqui
+    System.out.println("AX: "+ax);
+    //imprime(ax);
+    System.out.println("BX: "+bx);
+    //imprime(bx);
+    System.out.println("CX: "+cx);
+    //imprime(cx);
+    System.out.println("DX: "+dx);
+    //imprime(dx);
+    System.out.println("Cf:"+cf+" Zf:"+zf+" Sf:"+sf+" Of:"+of);
+    //imprime(pc);
+    System.out.println("PC: "+pc);
+    System.out.println("Endereco da instrucao eh: "+count);
+    System.out.println("/////////////////////////////////////////////////////////////////");
+    count++;
+  }
 System.out.println("Fim da execucao");
   }
-  
+
   public static void imprime(boolean[] a){ // autoexplicativo
-	  for(int i = 0 ; i < a.length ; i++){
-		  System.out.print(a[i] ? "1 ": "0 "); 
-	  }
-	  System.out.println();
+    for(int i = 0 ; i < a.length ; i++){
+      System.out.print(a[i] ? "1 ": "0 ");
+    }
+    System.out.println();
   }
   public static void le_codigo_do_arquivo(){
-	  try{
-				// Lê o arquivo
-				BufferedReader reader = new BufferedReader(new FileReader("codigo.txt"));
-				String line;
-				line = reader.readLine();
-				int a = 0;
-				while(line != null){
-					memoria[a] = line;
-					a++;
-					line = reader.readLine();
-				}
-				memoria[a] = "EXIT";
+    try{
+        // Lê o arquivo
+        BufferedReader reader = new BufferedReader(new FileReader("codigo.txt"));
+        String line;
+        line = reader.readLine();
+        int a = 0;
+        while(line != null){
+          memoria[a] = line;
+          a++;
+          line = reader.readLine();
+        }
+        memoria[a] = "EXIT";
   }
   catch(Exception e){};
 }
