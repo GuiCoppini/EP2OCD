@@ -49,7 +49,7 @@ int iNew = Integer.parseInt(binString, 2);
       System.out.println("PC: "+pc);
       System.out.println("Endereco da instrucao eh: "+count);
       System.out.println("/////////////////////////////////////////////////////////////////");
-      count++;
+      count++; // Mudar isso aqui pra ser um endereço de memoria???
     }
   System.out.println("Fim da execucao");
   }
