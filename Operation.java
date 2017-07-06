@@ -10,6 +10,18 @@ public class Operation {
     "JGE", "JLE", "&", "|" }; // nao tira os espacos pfvr
     // mapear pra cada operacao qual eh o microcodigo correspondente pfvr
     
+    public static boolean[] converteString(String numero1) {
+        String conversao[] = numero1.split("");
+        boolean[] binario = new boolean[conversao.length];
+        for (int i = 0; i < conversao.length; i++) {
+            if (numero1.charAt(i) == '1')
+                binario[i] = true;
+            else
+                binario[i] = false;
+        }
+        return binario;
+    }
+    
     public static void executa(int pc) {
         int posicao = find(pc);// encontra qual a funcao em string
         String[] parts = Principal.memoria[pc].substring(3).split(","); // pega
@@ -31,7 +43,7 @@ public class Operation {
         // opCode[posicao] eh o opcode referente ao comando passado.
         System.out.println(Principal.memoria[pc]);
         System.out.println(opCode[posicao]);
-        Firmware.principal(arg1, arg2, line[posicao]);
+        Firmware.principal(arg1, arg2, opCode[posicao]);
         switch (posicao) {
             case 0: // mov(vale lembrar q temos 3 casos dentro do mov)
                 // System.out.println("MOV");

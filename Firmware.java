@@ -1,14 +1,11 @@
-import java.util.Arrays;
-import java.util.HashSet;
-
-import javax.swing.text.AbstractDocument.LeafElement;
 
 public class Firmware {
     // Cuida das microInstrucoes (Criar, printar e organizar)
-    private boolean[][] microInstrucoes = new boolean[400][64];
+    private boolean[][] microInstrucoes = new boolean[100][64];
     String[] nomePorta = { "PCin", "PCout", "MARin", "MBRin", "MBRout", "AXin", "AXout", "BXin", "BXout", "CXin",
     "CXout", "IRin", "IRP2out", "IRP2in", "P1out", "P1in", "Xin", "ULAin", "ACout", "MARout", "MBRoutToMEM",
-    "MBRinFromMEM", "MEMORIAin", "MEMORIAout", "DXin", "DXout", "ADRESS VALID", "READ", "WRITE" };
+    "MBRinFromMEM", "MEMORIAin", "MEMORIAout", "DXin", "DXout", "ADRESS VALID", "READ", "WRITE",
+    "OPERACAOout" };
     private int linhaAtual = 0;
     
     // aqui vai a matrizona que contem todas as micro instrucoes. @COPS favor
@@ -35,6 +32,7 @@ public class Firmware {
     
     private void MOV(String parametro1, String parametro2) {
         // TODO Auto-generated method stub
+        inicioDasMicro[1] = linhaAtual;
         // busca ja esta feita
         int pr1 = checaParametro(parametro1, "in") + 1;
         int pr2 = -1;
@@ -53,6 +51,7 @@ public class Firmware {
                 linhaAtual++;
             }
         } // abri portas x , y, z ..... quantas precisar.
+        fimDasMicro[1] = linhaAtual; // 1 pois eh o opcode dela
     }
     
     int checaParametro(String parametro, String tipo) {
@@ -88,6 +87,7 @@ public class Firmware {
     
     private void SUB(String parametro1, String parametro2) {
         // Adiciona o conteudo do primeiro no segundo
+        inicioDasMicro[3] = linhaAtual;
         int pr1 = checaParametro(parametro1, "out") + 1;
         int pr2 = -1;
         try {
@@ -109,23 +109,27 @@ public class Firmware {
                 linhaAtual++;
             }
         }
+        fimDasMicro[3] = linhaAtual;
+        
     }
     
     private void ADD(String parametro1, String parametro2) {
         // Adiciona o conteudo do primeiro no segundo
+        inicioDasMicro[2] = linhaAtual;
         int pr1 = checaParametro(parametro1, "out") + 1;
         int pr2 = -1;
         try {
             pr2 = checaParametro(parametro2, "out") + 1;
         } catch (Exception e) {
         }
+        // if(parametro2.charAt(0))
         if (pr1 != -1) {
             if (pr2 != -1) {
                 // os dois existem, e sei quais sao.
                 int[] t1 = { 17, pr1 };
                 abrePortas(t1, linhaAtual);
                 linhaAtual++;
-                int[] t2 = { 18, pr2 };
+                int[] t2 = { 18, pr2, 30 };
                 abrePortas(t2, linhaAtual);
                 linhaAtual++;
                 pr1 = checaParametro(parametro1, "in") + 1;
@@ -134,9 +138,12 @@ public class Firmware {
                 linhaAtual++;
             }
         }
+        fimDasMicro[2] = linhaAtual;
     }
     
     private void BUSCA() {
+        // sempre a primeira coisa
+        inicioDasMicro[0] = linhaAtual;
         int[] t1 = { 2, 3, 18 }; // abri portas x , y, z ..... quantas precisar.
         abrePortas(t1, linhaAtual);
         linhaAtual++;
@@ -150,6 +157,7 @@ public class Firmware {
         int[] t4 = { 5, 12 }; // abri portas x , y, z ..... quantas precisar.
         abrePortas(t4, linhaAtual);
         linhaAtual++;
+        fimDasMicro[0] = linhaAtual;
     }
     
     void leMicro(boolean[] micro, int tamanho) {
@@ -179,29 +187,38 @@ public class Firmware {
         System.out.print(nomePorta[numeroDaPorta] + " ");
     }
     
+    static int[] fimDasMicro = new int[100];
+    static int[] inicioDasMicro = new int[100];
+    
     static int linhaOpCode(String opCode) {
         // retorna a linha da matriz que comeca essa instrucao
-        return 10;
+        int foo = (int) Integer.parseInt(opCode, 2);
+        return inicioDasMicro[foo];
     }
     
     static int fimLinhaOpCode(String opCode) {
-        return 20;
+        int foo = (int) Integer.parseInt(opCode, 2);
+        return fimDasMicro[foo];
     }
     
     public static void principal(String arg1, String arg2, String opCode) {
         Firmware firm = new Firmware();
         firm.criaMatriz(arg1, arg2);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < fimLinhaOpCode(opCode); i++) {
             firm.leMicro(firm.microInstrucoes[i], 29);
         }
+        for (int j = linhaOpCode(opCode); j < fimLinhaOpCode(opCode); j++)
+            firm.leMicro(firm.microInstrucoes[j], 29);
     }
     
     public static void main(String[] args) {
         Firmware firm = new Firmware();
         firm.criaMatriz("AX", "BX");
-        for (int i = 0; i < firm.linhaAtual; i++) {
+        for (int i = 0; i < fimLinhaOpCode("00000"); i++) {
             firm.leMicro(firm.microInstrucoes[i], 29);
         }
+        for (int j = linhaOpCode("0010"); j < fimLinhaOpCode("0010"); j++)
+            firm.leMicro(firm.microInstrucoes[j], 29);
     }
     
     static void imprimeAcao(String a, String b) {
