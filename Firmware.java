@@ -163,24 +163,13 @@ public class Firmware {
     void leMicro(boolean[] micro, int tamanho) {
         // le o vetor da micro instrucao e chama as funcoes nescessarias para
         // executar o mesmo.
-        boolean aux1 = false;
-        boolean aux2 = false;
-        int numAux1 = -1;
-        int numAux2 = -1;
         for (int i = 0; i < tamanho; i++) {
-            if (micro[i] == true) {
-                if (aux1 == true) {
-                    aux2 = true;
-                    numAux2 = i;
-                } else {
-                    aux1 = true;
-                    numAux1 = i;
-                }
-                if (aux1 == true && aux2 == true)
-                    imprimeAcao(nomePorta[numAux1], nomePorta[numAux2]);
+            for (int j = i + 1; j < tamanho; j++) {
+                if (i != j)
+                    if (micro[i] == true && micro[j] == true)
+                        imprimeAcao(nomePorta[i], nomePorta[j]);
             }
         }
-        System.out.println();
     }
     
     void printaPorta(int numeroDaPorta) {
