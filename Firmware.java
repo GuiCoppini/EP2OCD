@@ -31,22 +31,35 @@ public class Firmware {
     }
     
     private void MOV(String parametro1, String parametro2) {
-        // TODO Auto-generated method stub
         inicioDasMicro[1] = linhaAtual;
+        boolean pr1EhNum = false;
+        boolean pr2EhNum = false;
         // busca ja esta feita
-        int pr1 = checaParametro(parametro1, "in") + 1;
+        int pr1 = -1;
+        try{
+            pr1 = Integer.parseInt(parametro1);
+            pr1EhNum = true;
+        } catch(Exception e1) {
+         pr1 = checaParametro(parametro1, "in") + 1;
+        }
         int pr2 = -1;
         try {
-            pr2 = checaParametro(parametro2, "out") + 1;
+            pr2 = Integer.parseInt(parametro2);
+            pr2EhNum = true;
         } catch (Exception e) {
+            pr2 = checaParametro(parametro2, "out") + 1;
         }
-        if (pr1 != -1) {
-            if (pr2 != -1) {
+        if (pr1 != -1 && !pr1EhNum) {
+            if(pr2 != -1 && !pr2EhNum) {
                 int[] t1 = { pr1, pr2 };
                 abrePortas(t1, linhaAtual);
                 linhaAtual++;
-            } else {
-                int[] t1 = { pr1, pr1 };
+            }else if(pr2EhNum){
+                int[] t1 = { pr1 , 13};
+                abrePortas(t1, linhaAtual);
+                linhaAtual++;
+            }if(pr1EhNum && pr2 != -1){
+                int[] t1 = { pr2 , 13};
                 abrePortas(t1, linhaAtual);
                 linhaAtual++;
             }
@@ -115,18 +128,28 @@ public class Firmware {
     
     private void ADD(String parametro1, String parametro2) {
         // Adiciona o conteudo do primeiro no segundo
-        inicioDasMicro[2] = linhaAtual;
-        int pr1 = checaParametro(parametro1, "out") + 1;
+        boolean pr1EhNum = false;
+        boolean pr2EhNum = false;
+        // busca ja esta feita
+        int pr1 = -1;
+        try{
+            pr1 = Integer.parseInt(parametro1);
+            pr1EhNum = true;
+        } catch(Exception e1) {
+         pr1 = checaParametro(parametro1, "in") + 1;
+        }
         int pr2 = -1;
         try {
-            pr2 = checaParametro(parametro2, "out") + 1;
+            pr2 = Integer.parseInt(parametro2);
+            pr2EhNum = true;
         } catch (Exception e) {
+            pr2 = checaParametro(parametro2, "out") + 1;
         }
         // if(parametro2.charAt(0))
-        if (pr1 != -1) {
-            if (pr2 != -1) {
+        if (pr1 != -1 && !pr1EhNum) {
+            if (pr2 != -1 && !pr2EhNum) {
                 // os dois existem, e sei quais sao.
-                int[] t1 = { 17, pr1 };
+                int[] t1 = { 17, pr1};
                 abrePortas(t1, linhaAtual);
                 linhaAtual++;
                 int[] t2 = { 18, pr2, 30 };
@@ -134,6 +157,28 @@ public class Firmware {
                 linhaAtual++;
                 pr1 = checaParametro(parametro1, "in") + 1;
                 int[] t3 = { 19, pr1 };
+                abrePortas(t3, linhaAtual);
+                linhaAtual++;
+            }else if(pr2EhNum && !pr1EhNum){
+                 int[] t1 = { 17, pr1 };
+                abrePortas(t1, linhaAtual);
+                linhaAtual++;
+                int[] t2 = { 18, 13, 30 };
+                abrePortas(t2, linhaAtual);
+                linhaAtual++;
+                pr1 = checaParametro(parametro1, "in") + 1;
+                int[] t3 = { 19, pr1};
+                abrePortas(t3, linhaAtual);
+                linhaAtual++;
+            }else if(pr1EhNum && !pr2EhNum){
+                 int[] t1 = { 17, pr2 };
+                abrePortas(t1, linhaAtual);
+                linhaAtual++;
+                int[] t2 = { 18, 13, 30 };
+                abrePortas(t2, linhaAtual);
+                linhaAtual++;
+                pr1 = checaParametro(parametro1, "in") + 1;
+                int[] t3 = { 19, pr2};
                 abrePortas(t3, linhaAtual);
                 linhaAtual++;
             }
@@ -160,17 +205,18 @@ public class Firmware {
         fimDasMicro[0] = linhaAtual;
     }
     
-    void leMicro(boolean[] micro, int tamanho) {
-        // le o vetor da micro instrucao e chama as funcoes nescessarias para
-        // executar o mesmo.
-        for (int i = 0; i < tamanho; i++) {
-            for (int j = i + 1; j < tamanho; j++) {
-                if (i != j)
-                    if (micro[i] == true && micro[j] == true)
-                        imprimeAcao(nomePorta[i], nomePorta[j]);
-            }
+void leMicro(boolean[] micro, int tamanho) {
+                // le o vetor da micro instrucao e chama as funcoes nescessarias para
+                // executar o mesmo.
+                for (int i = 0; i < tamanho; i++) {
+                        for (int j = i + 1; j < tamanho; j++) {
+                                if (i != j)
+                                        if (micro[i] == true && micro[j] == true) {
+                                                imprimeAcao(nomePorta[i], nomePorta[j]);
+                                        }
+                        }
+                }System.out.println();
         }
-    }
     
     void printaPorta(int numeroDaPorta) {
         System.out.print(nomePorta[numeroDaPorta] + " ");
@@ -210,24 +256,35 @@ public class Firmware {
             firm.leMicro(firm.microInstrucoes[j], 29);
     }
     
-    static void imprimeAcao(String a, String b) {
-        char impresso = 0;
-        if (a.contains("out") && b.contains("out"))
+   static void imprimeAcao(String a, String b) {
+        String first = "";
+        String second = "";
+        if((a.contains("MBRinFromMEM") && !b.contains("MEMORIAout")) || (b.contains("MBRinFromMEM") && !a.contains("MEMORIAout")))
             return;
-        if ((a.contains("MEM") && b.contains("MEM")) && (a.contains("in") || b.contains("in"))) {
+        if((a.contains("MEMORIAout") && !b.contains("MBRinFromMEM")) || (b.contains("MEMORIAout") && !a.contains("MBRinFromMEM")))
             return;
-        }
-        if (a.contains("in")) {
-            System.out.print(a);
-            impresso = 'a';
-        } else {
-            System.out.print(b);
-            impresso = 'b';
-        }
-        System.out.print(" <- ");
-        if (impresso == 'a')
-            System.out.print(b + "\n");
-        else
-            System.out.print(a + "\n");
+        if(a.contains("MEMORIAout") && b.contains("MBRinFromMEM")){ // sai memoria entra mbr
+            System.out.println(b + " <- " + a);
+            return;
+        } else if(b.contains("MEMORIAout") && a.contains("MBRinFromMEM")) { // sai memoria entra mbr de novo (codigo porco)
+            System.out.println(a + "<- " + b);
+            return;
+        } else
+            if (b.contains("MEMORIAin") && a.contains("MARout")){ // sai MAR entra memoria
+                System.out.println(b + "<- " + a);
+                return;
+            } else if (a.contains("MEMORIAin") && b.contains("MARout")){ // sai MAR entra memoria de novo
+                System.out.println(b + "<- " + a);
+                return;
+            }
+            if(a.contains("in") && b.contains("out")) {
+                first = a;
+                second = b;
+            } else if (a.contains("out") && b.contains("in")) {
+                first = b;
+                second = a;
+            }
+            if(first != "" && second != "")
+                System.out.println(first + "< - " + second);
     }
 }
