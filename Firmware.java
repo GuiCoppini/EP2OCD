@@ -99,31 +99,63 @@ public class Firmware {
     }
     
     private void SUB(String parametro1, String parametro2) {
-        // Adiciona o conteudo do primeiro no segundo
-        inicioDasMicro[3] = linhaAtual;
-        int pr1 = checaParametro(parametro1, "out") + 1;
+       // Adiciona o conteudo do primeiro no segundo
+        boolean pr1EhNum = false;
+        boolean pr2EhNum = false;
+        // busca ja esta feita
+        int pr1 = -1;
+        try{
+            pr1 = Integer.parseInt(parametro1);
+            pr1EhNum = true;
+        } catch(Exception e1) {
+         pr1 = checaParametro(parametro1, "in") + 1;
+        }
         int pr2 = -1;
         try {
-            pr2 = checaParametro(parametro2, "out") + 1;
+            pr2 = Integer.parseInt(parametro2);
+            pr2EhNum = true;
         } catch (Exception e) {
+            pr2 = checaParametro(parametro2, "out") + 1;
         }
-        if (pr1 != -1) {
-            if (pr2 != -1) {
+        // if(parametro2.charAt(0))
+        if (pr1 != -1 && !pr1EhNum) {
+            if (pr2 != -1 && !pr2EhNum) {
                 // os dois existem, e sei quais sao.
-                int[] t1 = { 17, pr1 };
+                int[] t1 = { 17, pr1};
                 abrePortas(t1, linhaAtual);
                 linhaAtual++;
-                int[] t2 = { 18, pr2 };
+                int[] t2 = { 18, pr2, 30 };
                 abrePortas(t2, linhaAtual);
                 linhaAtual++;
                 pr1 = checaParametro(parametro1, "in") + 1;
                 int[] t3 = { 19, pr1 };
                 abrePortas(t3, linhaAtual);
                 linhaAtual++;
+            }else if(pr2EhNum && !pr1EhNum){
+                 int[] t1 = { 17, pr1 };
+                abrePortas(t1, linhaAtual);
+                linhaAtual++;
+                int[] t2 = { 18, 13, 30 };
+                abrePortas(t2, linhaAtual);
+                linhaAtual++;
+                pr1 = checaParametro(parametro1, "in") + 1;
+                int[] t3 = { 19, pr1};
+                abrePortas(t3, linhaAtual);
+                linhaAtual++;
+            }else if(pr1EhNum && !pr2EhNum){
+                 int[] t1 = { 17, pr2 };
+                abrePortas(t1, linhaAtual);
+                linhaAtual++;
+                int[] t2 = { 18, 13, 30 };
+                abrePortas(t2, linhaAtual);
+                linhaAtual++;
+                pr1 = checaParametro(parametro1, "in") + 1;
+                int[] t3 = { 19, pr2};
+                abrePortas(t3, linhaAtual);
+                linhaAtual++;
             }
         }
-        fimDasMicro[3] = linhaAtual;
-        
+        fimDasMicro[2] = linhaAtual;
     }
     
     private void ADD(String parametro1, String parametro2) {
@@ -248,7 +280,7 @@ void leMicro(boolean[] micro, int tamanho) {
     
     public static void main(String[] args) {
         Firmware firm = new Firmware();
-        firm.criaMatriz("AX", "BX");
+        firm.criaMatriz("AX", "5");
         for (int i = 0; i < fimLinhaOpCode("00000"); i++) {
             firm.leMicro(firm.microInstrucoes[i], 29);
         }
