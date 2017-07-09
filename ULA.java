@@ -10,9 +10,13 @@ public class ULA{
 		Principal.portas[(portas[2]-1)] = 1;
 		String opcode = s.substring(0,5); //5 primeiros bits; // mov vai ser feito na ULA msm e foda-se // sapora vai de (n,x-1) maldito substring
 		int aa = Principal.isRegistrador(s.substring(5,21));
+		System.out.println("sub 5,21                     "+s.substring(5,21));
 		int bb = Principal.isRegistrador(s.substring(21,37));
+		System.out.println("sub 21,37 "+s.substring(21,37));
 		String a = s.substring(5,21);
 		String b = s.substring(21,37);
+		String zero = "0";
+		String um = "1";
 		if(aa != -1){ // quer dizer q eh um reg
 			if(aa == 0)a = Principal.axx.getAX();
 			if(aa == 1)a = Principal.bxx.getBX();
@@ -30,10 +34,68 @@ public class ULA{
 		resp[0] = "0";
 		resp[1] = "0";
 		resp[2] = "0";
+		boolean[] resposta = new boolean[]{false,false,false};
 		//if(opcode == "00001") mov(s.substring(5,20), s.substring(21,36)); // decide que bagaca de OP realizar e passar os args pra frente
-		if(opcode.equalsIgnoreCase("00010"))resp = add(a, b);
-		if(opcode.equalsIgnoreCase("00011"))resp = sub(a, b);
-		if(opcode == "00100") resp[0] = b;
+		if(opcode.equalsIgnoreCase(Principal.array[1])){ //add
+			resp = add(a, b);
+			if(aa == 0)Principal.axx.setAX(resp[0]);
+			if(aa == 1)Principal.bxx.setBX(resp[0]);
+			if(aa == 2)Principal.cxx.setCX(resp[0]);
+			if(aa == 3)Principal.dxx.setDX(resp[0]);
+			if(resp[1].equalsIgnoreCase(um))resposta[1] = true;
+				else resposta[1] = false;
+				if(resp[2].equalsIgnoreCase(um))resposta[2] = true;
+				else resposta[2] = false;
+			
+		}
+		if(opcode.equalsIgnoreCase(Principal.array[2])){ //sub
+			resp = sub(a, b);
+			if(aa == 0)Principal.axx.setAX(resp[0]);
+			if(aa == 1)Principal.bxx.setBX(resp[0]);
+			if(aa == 2)Principal.cxx.setCX(resp[0]);
+			if(aa == 3)Principal.dxx.setDX(resp[0]);
+			if(resp[1].equalsIgnoreCase(um))resposta[1] = true;
+				else resposta[1] = false;
+				if(resp[2].equalsIgnoreCase(um))resposta[2] = true;
+				else resposta[2] = false;
+		}
+		if(opcode.equalsIgnoreCase(Principal.array[0])){ //mov
+			//resp[0] = b;
+			if(aa == 0){
+				
+				if(bb == 0)b = Principal.axx.getAX();
+				if(bb == 1)b = Principal.bxx.getBX();
+				if(bb == 2)b = Principal.cxx.getCX();
+				if(bb == 3)b = Principal.dxx.getDX();
+				Principal.axx.setAX(b);
+				}
+			if(aa == 1){
+				if(bb == 0)b = Principal.axx.getAX();
+				if(bb == 1)b = Principal.bxx.getBX();
+				if(bb == 2)b = Principal.cxx.getCX();
+				if(bb == 3)b = Principal.dxx.getDX();
+				Principal.bxx.setBX(b);
+				}
+			if(aa == 2){
+				if(bb == 0)b = Principal.axx.getAX();
+				if(bb == 1)b = Principal.bxx.getBX();
+				if(bb == 2)b = Principal.cxx.getCX();
+				if(bb == 3)b = Principal.dxx.getDX();
+				Principal.cxx.setCX(b);
+			}
+			if(aa == 3){
+				if(bb == 0)b = Principal.axx.getAX();
+				if(bb == 1)b = Principal.bxx.getBX();
+				if(bb == 2)b = Principal.cxx.getCX();
+				if(bb == 3)b = Principal.dxx.getDX();
+				Principal.dxx.setDX(b);
+			}
+			boolean[] fake =new boolean[]{true,false,false};
+			return(fake);
+		}
+		if(opcode.equalsIgnoreCase(Principal.array[8])){
+			jmp(a,null);
+		}
 	//	if(opcode == "00101") return div(s.substring(5,20), s.substring(21,36));
 		//if(opcode == "00110") inc(s.substring(5,20), s.substring(21,36));
 	//	if(opcode == "00111") return dec(s.substring(5,20), s.substring(21,36));
@@ -48,19 +110,22 @@ public class ULA{
 	//	if(opcode == "10000") return and(s.substring(5,20), s.substring(21,36)); // sei la comofaz
 		//if(opcode == "10001") return or(s.substring(5,20), s.substring(21,36)); //tbm n sei
 		// quer dizer q eh um reg
-			String zero = "0";
-			String um = "1";
-			boolean[] resposta = new boolean[]{false,false,false};
-			resposta[1] = resp[1].equalsIgnoreCase(um);
-			resposta[2] = resp[2].equalsIgnoreCase(um);
-			resposta[0] = true;//n importa essa
-			if(aa == 0)Principal.axx.setAX(resp[0]);
-			if(aa == 1)Principal.bxx.setBX(resp[0]);
-			if(aa == 2)Principal.cxx.setCX(resp[0]);
-			if(aa == 3)Principal.dxx.setDX(resp[0]);
+			//resposta[1] = resp[1].equalsIgnoreCase(um);
+			//resposta[2] = resp[2].equalsIgnoreCase(um);
+			resposta[0] = false;//n importa essa
+		//	if(aa == 0)Principal.axx.setAX(resp[0]);
+		//	if(aa == 1)Principal.bxx.setBX(resp[0]);
+		//	if(aa == 2)Principal.cxx.setCX(resp[0]);
+		//	if(aa == 3)Principal.dxx.setDX(resp[0]);
 		return(resposta);
 	}//faz a div,o dec e o resto dos jumps, ja fiz os primeiros entao ja sabem a logica
 	private static void jmp(String a , String b){ // se tiver uma condicao, ela vai estar em b
+		int valor = (Integer.parseInt(a)-1); //-1 pq o pc vai ser incrementado
+		a = Integer.toBinaryString(valor);
+		//System.out.println("AAAAAAAAAAAAAAAAA "+a);
+		//
+		a = a.substring(16,32);
+		System.out.println("AAAAAAAAAAAAAAAAA "+a.length());
 		PC.setPC(a);
 	}
 	private static String[] inc(String a , String b){
@@ -123,11 +188,15 @@ public class ULA{
 		respo[2]="0";
 		return(respo);
 	}
-	private static String[] sub(String a , String b){
+	private static String[] sub(String a , String b){ //sub esta errada n sei pq
 		int menos = Integer.parseInt(b,2) * -1;
 		String c = Integer.toBinaryString(menos);
-		b = c.substring(15,32); // saporra faz o complemento de dois automatico soh q fica com tamanho 32
-		return (add(a,b)); //soma a+(-b)
+		b = c.substring(15,32);// saporra faz o complemento de dois automatico soh q fica com tamanho 32
+        String um  ="0000000000000001";	
+		String[] aux = new String[3];
+		aux = add(a,b);	
+		b = aux[0];	
+		return (aux); //soma a+(-b)
 	}
 	private static String[] add(String a , String b){
 		String r ="";

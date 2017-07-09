@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.*;
 public  class PC{
-	private static String pc = "000000000000000"; //endereco
+	private static String pc = "0000000000000000"; //endereco
 	private static int[] portas ={1,2};
 	
 	public static String getPC(){

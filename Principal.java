@@ -45,13 +45,13 @@ public class Principal {
         while (true) {
            marr.setMAR(pcc.getPC());
 		   memoriaa.getMemoria(); // fetch // apos isso ,mbr ja esta setada com o valor da posicao MAR da memoria <3
-		   pcc.setPC(incrementaPC(pcc.getPC())); //pc++ <3
 		   irr.setIR(mbrr.getMBRfromUC());
 		   String iere = irr.getIR();
 		   for(int i = 0 ; i < array.length ; i++)System.out.println("OPCODE: "+array[i]+" EH IGUAL A OPERACAO: "+relacao[i]);
 		   System.out.println("Operacao em binario(IR) "+IR.getIR());
-		  if(iere.equalsIgnoreCase("EXIT")) break;
+		  //if(iere.equalsIgnoreCase("EXIT")) break;
 		   boolean[] retorno = new boolean[3];
+		   System.out.println("IEEEEEREEEE "+iere);
 		   retorno = ulaa.executa(iere); // executamos finalmente
 		   System.out.println("Overflow flag(of): "+retorno[1]);
 		   System.out.println("Zero flag(zf): "+retorno[2]);
@@ -59,13 +59,14 @@ public class Principal {
 		   System.out.println("PC "+pcc.getPC());
 		   System.out.print("PALAVRA HORIZONTAL ");
 		   imprimeportas();
-		   System.out.print(iere);
+		   //System.out.print(iere);
 		   System.out.print(retorno[1]);
            System.out.println(retorno[2]);		   /*
 		   professor, os numeros 2, 3 ,4 ,5 sao para indicar enderecos de registradores,eu poderia colocar os registradores no final da memoria, em algum endereco reservado, mas 
 		   achei mais simples assim, visto que eh algo da nossa 'arquitetura', cada hardware tem seus trejeitos 
 		   */
 		   System.out.print("ESTADO DAS PORTAS");
+		   pcc.setPC(incrementaPC(pcc.getPC())); //pc++ <3
 		   imprimeportas();
 		   System.out.println();
 		   System.out.println("AX: "+axx.getAX()); // apesar de darmos get direto aqui, para a ULA que executa operacoes os regs vao de 0 a 3 na memoria
@@ -75,7 +76,7 @@ public class Principal {
 		   zeraportas();
 		   System.in.read();
         }
-        System.out.println("Fim da execucao");
+       // System.out.println("Fim da execucao");
     }
     
    // private static void cicloDeBusca(int pc2) {
@@ -102,20 +103,21 @@ public class Principal {
 				String novaL = line.substring(4,line.length());
 				String[] args = novaL.split(",");
 				String arg1 = to16Binary(args[0]);
-				String arg2 = to16Binary(args[1]);
+				String arg2 = "0000000000000000";
+				if(args.length > 1) arg2 = to16Binary(args[1]);
 				memoriaa.mem[a] = opcode+arg1+arg2;
                 a++;
                 line = reader.readLine();
             }
-            memoriaa.mem[a] = "EXIT";
+            //memoriaa.mem[a] = "EXIT";
         } catch (Exception e) {
 		};
         
     }
 	public static String traduz(String s){
-		String[] palavras = new String[]{"ADD","SUB","MUL","DIV","INC","DEC","CMP","JMP","JE ","JNE","JG ","JL ","JGE","JLE","and","or "}; // vlw java ate pq uma String com "ADD" dentro nao eh igual a "ADD" mesmo eu criando ela com = "ADD"
+		//String[] palavras = new String[]{"ADD","SUB","MUL","DIV","INC","DEC","CMP","JMP","JE ","JNE","JG ","JL ","JGE","JLE","and","or "}; // vlw java ate pq uma String com "ADD" dentro nao eh igual a "ADD" mesmo eu criando ela com = "ADD"
 		for(int i = 0 ; i < 18 ; i++){ // array vai ate 17
-			if(s.equalsIgnoreCase(palavras[i])) return (array[i]);
+			if(s.equalsIgnoreCase(relacao[i])) return (array[i]);
 		}
 		return null;
 		
@@ -125,19 +127,19 @@ public class Principal {
 		String[] regs = new String[]{"AX","BX","CX","DX"};
 		String add = "00000000000000";
 			if (s.equalsIgnoreCase(regs[0])){
-			add = "0000000000000002"; // os regs tem q ser um end invalido e diferente de tudo
+			add = registradores[0]; // os regs tem q ser um end invalido e diferente de tudo
 			return(add);
 			}
 			if(s.equalsIgnoreCase(regs[1])){
-			add="0000000000000003";
+			add=registradores[1];
 			return(add);
 			}
 			if(s.equalsIgnoreCase(regs[2])){
-			add="0000000000000004";
+			add=registradores[2];
 			return(add);
 			}
 			if(s.equalsIgnoreCase(regs[3])){
-			add="0000000000000005";
+			add=registradores[3];
 			return(add);
 			}
 		valor = Integer.parseInt(s);
@@ -152,17 +154,23 @@ public class Principal {
 		for(int i = 0 ; i < portas.length ; i++)System.out.print(portas[i]);
 	}
 	public static int isRegistrador(String a){
-		try{
-			int b = Integer.parseInt(a);
-		}
-		catch(Exception e){
-			for(int i = 0 ; i < registradores.length ; i++)if(a.equalsIgnoreCase(registradores[i])) return i;
-		}
+			for(int i = 0 ; i < registradores.length ; i++){
+				if(a.equalsIgnoreCase(registradores[i])) {	
+				System.out.println("lalalala "+i);
+				return i;
+				}
+			}
 		return -1;
 	}
 	public static String incrementaPC(String pc){
+		String inv = "1111111111111111"; //-1 n funfa aqui
+		if(pc.equalsIgnoreCase(inv)) {
+			pc = "0000000000000000";
+			return(pc);
+			}
 		int valor = (Integer.parseInt(pc,2)+1);
 		pc = Integer.toBinaryString(valor);
+		System.out.println("PCPCPPCPCPCPCP  "+pc);
 		pc = String.format("%16s",pc).replace(' ', '0');
 		return(pc);
 	}

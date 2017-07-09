@@ -1,6 +1,7 @@
-ADD ax,32767
+ADD ax,10
 ADD ax,1
 ADD bx,10
 SUB bx,11
 SUB cx,9
 SUB ax,12
+jmp 0
