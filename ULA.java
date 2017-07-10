@@ -4,20 +4,28 @@ import java.io.FileReader;
 import java.io.*;
 public class ULA{
 	private static int[] portas = {17,18,19} ;//17 = entrada args , 18 = entrada operacao , 19 = saida
-	public static boolean[] executa(String s){
+	private static boolean isEqual = false;
+	private static boolean isGreater = false;
+	private static boolean isLower = false;
+	public static String[] executa(String s){
 		Principal.portas[(portas[0]-1)] = 1;
 		Principal.portas[(portas[1]-1)] = 1;
 		Principal.portas[(portas[2]-1)] = 1;
 		String opcode = s.substring(0,5); //5 primeiros bits; // mov vai ser feito na ULA msm e foda-se // sapora vai de (n,x-1) maldito substring
 		int aa = Principal.isRegistrador(s.substring(5,21));
-		System.out.println("sub 5,21                     "+s.substring(5,21));
 		int bb = Principal.isRegistrador(s.substring(21,37));
-		System.out.println("sub 21,37 "+s.substring(21,37));
 		String a = s.substring(5,21);
 		String b = s.substring(21,37);
 		String zero = "0";
 		String um = "1";
+		boolean aisReg = false;
+		boolean bisReg = false;
+		String[] resp = new String[3];
+		resp[0] = "0";
+		resp[1] = "0";
+		resp[2] = "0";
 		if(aa != -1){ // quer dizer q eh um reg
+			aisReg = true;
 			if(aa == 0)a = Principal.axx.getAX();
 			if(aa == 1)a = Principal.bxx.getBX();
 			if(aa == 2)a = Principal.cxx.getCX();
@@ -25,42 +33,13 @@ public class ULA{
 			
 		}
 		if( bb!= -1){ // quer dizer q eh um reg
+			bisReg = true;
 			if(bb == 0)b = Principal.axx.getAX();
 			if(bb == 1)b = Principal.bxx.getBX();
 			if(bb == 2)b = Principal.cxx.getCX();
 			if(bb == 3)b = Principal.dxx.getDX();
 		}// daqui pra baixo soh temos numeros, nada de registradores, apenas valores
-		String[] resp = new String[3];
-		resp[0] = "0";
-		resp[1] = "0";
-		resp[2] = "0";
-		boolean[] resposta = new boolean[]{false,false,false};
-		//if(opcode == "00001") mov(s.substring(5,20), s.substring(21,36)); // decide que bagaca de OP realizar e passar os args pra frente
-		if(opcode.equalsIgnoreCase(Principal.array[1])){ //add
-			resp = add(a, b);
-			if(aa == 0)Principal.axx.setAX(resp[0]);
-			if(aa == 1)Principal.bxx.setBX(resp[0]);
-			if(aa == 2)Principal.cxx.setCX(resp[0]);
-			if(aa == 3)Principal.dxx.setDX(resp[0]);
-			if(resp[1].equalsIgnoreCase(um))resposta[1] = true;
-				else resposta[1] = false;
-				if(resp[2].equalsIgnoreCase(um))resposta[2] = true;
-				else resposta[2] = false;
-			
-		}
-		if(opcode.equalsIgnoreCase(Principal.array[2])){ //sub
-			resp = sub(a, b);
-			if(aa == 0)Principal.axx.setAX(resp[0]);
-			if(aa == 1)Principal.bxx.setBX(resp[0]);
-			if(aa == 2)Principal.cxx.setCX(resp[0]);
-			if(aa == 3)Principal.dxx.setDX(resp[0]);
-			if(resp[1].equalsIgnoreCase(um))resposta[1] = true;
-				else resposta[1] = false;
-				if(resp[2].equalsIgnoreCase(um))resposta[2] = true;
-				else resposta[2] = false;
-		}
 		if(opcode.equalsIgnoreCase(Principal.array[0])){ //mov
-			//resp[0] = b;
 			if(aa == 0){
 				
 				if(bb == 0)b = Principal.axx.getAX();
@@ -90,145 +69,278 @@ public class ULA{
 				if(bb == 3)b = Principal.dxx.getDX();
 				Principal.dxx.setDX(b);
 			}
-			boolean[] fake =new boolean[]{true,false,false};
-			return(fake);
+			//boolean[] fake =new boolean[]{true,false,false};
+			return(resp);
 		}
-		if(opcode.equalsIgnoreCase(Principal.array[8])){
-			jmp(a,null);
+		if(opcode.equalsIgnoreCase(Principal.array[1])){ //add
+			resp = add(a, b);
+			
 		}
-	//	if(opcode == "00101") return div(s.substring(5,20), s.substring(21,36));
-		//if(opcode == "00110") inc(s.substring(5,20), s.substring(21,36));
-	//	if(opcode == "00111") return dec(s.substring(5,20), s.substring(21,36));
-	//	if(opcode == "01000") return cmp(s.substring(5,20), s.substring(21,36)); // compare tem q setar um valor pros jumps, tipo CMP AX,42 
-		//if(opcode == "01001") jmp(s.substring(5,20), s.substring(21,36));//                                                       JE ENDERECO
-	//	if(opcode == "01010") je(s.substring(5,20), s.substring(21,36));
-	//	if(opcode == "01011") jne(s.substring(5,20), s.substring(21,36));
-	//	if(opcode == "01100") jg(s.substring(5,20), s.substring(21,36));
-	//	if(opcode == "01101") jl(s.substring(5,20), s.substring(21,36));
-	//	if(opcode == "01110") jge(s.substring(5,20), s.substring(21,36));
-	//	if(opcode == "01111") jle(s.substring(5,20), s.substring(21,36));
-	//	if(opcode == "10000") return and(s.substring(5,20), s.substring(21,36)); // sei la comofaz
-		//if(opcode == "10001") return or(s.substring(5,20), s.substring(21,36)); //tbm n sei
-		// quer dizer q eh um reg
-			//resposta[1] = resp[1].equalsIgnoreCase(um);
-			//resposta[2] = resp[2].equalsIgnoreCase(um);
-			resposta[0] = false;//n importa essa
-		//	if(aa == 0)Principal.axx.setAX(resp[0]);
-		//	if(aa == 1)Principal.bxx.setBX(resp[0]);
-		//	if(aa == 2)Principal.cxx.setCX(resp[0]);
-		//	if(aa == 3)Principal.dxx.setDX(resp[0]);
-		return(resposta);
+		if(opcode.equalsIgnoreCase(Principal.array[2])){ //sub
+			resp = sub(a, b);
+		}
+	
+		
+		if(opcode.equalsIgnoreCase(Principal.array[3])){ //MUL
+			resp = mul(a, b);
+		}
+		if(opcode.equalsIgnoreCase(Principal.array[4])){ //div
+			resp = div(a,b);
+		}
+		if(opcode.equalsIgnoreCase(Principal.array[5])){
+			resp = inc(a,b);
+		}//INC
+		if(opcode.equalsIgnoreCase(Principal.array[6])){
+			resp = dec(a,b);
+		}//DEC
+		if(opcode.equalsIgnoreCase(Principal.array[7])){
+			cmp(a,b);
+			System.out.println("ISREG "+a+" "+b+" "+isEqual);
+			return(resp);
+		}//CMP
+		if(opcode.equalsIgnoreCase(Principal.array[8])){ //JUMP // jmp e mov sao os unicos com ret
+			jmp(a,b);
+			return(resp);
+		}
+		if(opcode.equalsIgnoreCase(Principal.array[9])){
+			je(a,b);
+			return(resp);
+		}//JE
+		if(opcode.equalsIgnoreCase(Principal.array[10])){
+			jne(a,b);
+			return(resp);
+		}//JNE
+		if(opcode.equalsIgnoreCase(Principal.array[11])){
+			jg(a,b);
+			return(resp);
+		}//JG
+		if(opcode.equalsIgnoreCase(Principal.array[12])){
+			jl(a,b);
+			return(resp);
+		}//JL
+		if(opcode.equalsIgnoreCase(Principal.array[13])){
+			jge(a,b);
+			return(resp);
+		}//JGE
+		if(opcode.equalsIgnoreCase(Principal.array[14])){
+			jle(a,b);
+			//boolean[] fake =new boolean[]{true,false,false};
+			return(resp);
+		}//JLE
+		if(opcode.equalsIgnoreCase(Principal.array[15])){ 
+		boolean x = and(a,b);
+		if(x)resp[0] = "1";
+			return(resp);
+		}//&&
+		if(opcode.equalsIgnoreCase(Principal.array[16])){
+			boolean x = or(a,b);
+		if(x)resp[0] = "1";
+			return(resp);
+		}//or
+	
+		if(aisReg){
+			if(aa == 0){
+				
+				if(bb == 0)b = Principal.axx.getAX();
+				if(bb == 1)b = Principal.bxx.getBX();
+				if(bb == 2)b = Principal.cxx.getCX();
+				if(bb == 3)b = Principal.dxx.getDX();
+				Principal.axx.setAX(b);
+				}
+			if(aa == 1){
+				if(bb == 0)b = Principal.axx.getAX();
+				if(bb == 1)b = Principal.bxx.getBX();
+				if(bb == 2)b = Principal.cxx.getCX();
+				if(bb == 3)b = Principal.dxx.getDX();
+				Principal.bxx.setBX(b);
+				}
+			if(aa == 2){
+				if(bb == 0)b = Principal.axx.getAX();
+				if(bb == 1)b = Principal.bxx.getBX();
+				if(bb == 2)b = Principal.cxx.getCX();
+				if(bb == 3)b = Principal.dxx.getDX();
+				Principal.cxx.setCX(b);
+			}
+			if(aa == 3){
+				if(bb == 0)b = Principal.axx.getAX();
+				if(bb == 1)b = Principal.bxx.getBX();
+				if(bb == 2)b = Principal.cxx.getCX();
+				if(bb == 3)b = Principal.dxx.getDX();
+				Principal.dxx.setDX(b);
+			}
+		}
+		return(resp);
 	}//faz a div,o dec e o resto dos jumps, ja fiz os primeiros entao ja sabem a logica
 	private static void jmp(String a , String b){ // se tiver uma condicao, ela vai estar em b
 		int valor = (Integer.parseInt(a)-1); //-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
-		//System.out.println("AAAAAAAAAAAAAAAAA "+a);
-		//
-		a = a.substring(16,32);
-		System.out.println("AAAAAAAAAAAAAAAAA "+a.length());
+		a = a.substring((a.length()/2),a.length());
 		PC.setPC(a);
 	}
-	private static String[] inc(String a , String b){
-		int valor = Integer.parseInt(a,2)+1;
+	private static void je(String a , String b){
+		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		System.out.println("AAAAAAAAAAAAAAA "+a);
 		a = Integer.toBinaryString(valor);
-		String[] resp = new String[3];
-		resp[0]=a;
-		resp[1]="0";
-		resp[2]="0";
-		if(valor > 32767)resp[2]="1";
-		return(resp);
+		a = a.substring((a.length()/2),a.length());
+		//if(isEqual == true)
+		if(isEqual == true)	PC.setPC(a);
+		resetaflags();
 	}
+	public static void jne(String a , String b){
+		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		a = Integer.toBinaryString(valor);
+		a = a.substring((a.length()/2),a.length());
+		if(isEqual == false)PC.setPC(a);
+		resetaflags();
+	}
+	public static void jg(String a , String b){
+		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		a = Integer.toBinaryString(valor);
+		a = a.substring((a.length()/2),a.length());
+		if(isGreater == true)PC.setPC(a);
+		resetaflags();
+	}
+	public static void jl(String a , String b){
+		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		a = Integer.toBinaryString(valor);
+		a = a.substring((a.length()/2),a.length());
+		if(isLower == true)PC.setPC(a);
+		resetaflags();
+	}
+	public static void jge(String a , String b){
+		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		a = Integer.toBinaryString(valor);
+		a = a.substring((a.length()/2),a.length());
+		if((isEqual == true) || (isGreater == true))PC.setPC(a);
+		resetaflags();
+	}
+	public static void jle(String a , String b){
+		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		a = Integer.toBinaryString(valor);
+		a = a.substring((a.length()/2),a.length());
+		if((isEqual == true) || (isLower == true))PC.setPC(a);
+		resetaflags();
+	}
+	public static boolean and(String a , String b){
+		if((a != null) && (b != null)) return true;
+		return false;
+	}
+	public static boolean or(String a , String b){
+		if((a!= null) || (b != null)) return true;
+		return false;
+	}
+	private static String[] inc(String a , String b){
+			int va = Integer.parseInt(a);
+			//int vb = Integer.parseInt(b);
+			int soma = va+1;
+			int carry = 0;
+			int zero = 0;
+			if(soma > 32767) carry = 1;
+			if(soma == 0) zero = 1;
+			String res = Integer.toBinaryString(soma);
+			res = res.substring((res.length()/2),res.length());
+			String[] resposta = new String[3];
+			resposta[0] = res;
+			resposta[1] = Integer.toString(carry);
+			resposta[2] = Integer.toString(zero);
+			return(resposta);
+	}
+	private static String[] dec(String a , String b){
+			int va = Integer.parseInt(a);
+			//int vb = Integer.parseInt(b);
+			int soma = va-1;
+			int carry = 0;
+			int zero = 0;
+			if(soma > 32767) carry = 1;
+			if(soma == 0) zero = 1;
+			String res = Integer.toBinaryString(soma);
+			res = res.substring((res.length()/2),res.length());
+			String[] resposta = new String[3];
+			resposta[0] = res;
+			resposta[1] = Integer.toString(carry);
+			resposta[2] = Integer.toString(zero);
+			return(resposta);
+	}
+		
 	private static String[] mul(String a , String b){
-		int times = Integer.parseInt(b,2);
-		boolean negativo = false;
-		int valor = Integer.parseInt(a,2);
-		if(times < 0) {
-			times = times*-1;
-			negativo = true;
-		}
-		else if(times == 0){
-			String[] resp = new String[3];
-			resp[0]="0000000000000000";
-			resp[1]="0";
-			resp[2]="1";
-			return(resp);
-		}
-		else if(valor == 0){
-			String[] resp = new String[3];
-			resp[0]= a;
-			resp[1]="0";
-			resp[2]="1";
-			return(resp);
-			} 
-		else if((times == 1)) {
-			String[] resp = new String[3];
-			resp[0]= a;
-			resp[1]="0";
-			resp[2]="0";
-			return(resp);
-			}
-		String ret = a;
-		String[] soma = new String[3];
-		for(int i = 0 ; i < times ; i++){
-			soma = add(ret,a);
-			ret = soma[0];
-		}
-		if(negativo == true){
-			int valor2 = (Integer.parseInt(ret,2)*(-1));
-			String aux = Integer.toBinaryString(valor2);
-			ret = aux.substring(15,32);
-		} 
-		boolean of = false;
-		int aaa = Integer.parseInt(ret,2);
-		if(aaa > 32767){of = true;}
-		String[] respo = new String[3];
-		respo[0] = ret;
-		if(!of){respo[1]= "0";}
-		else {respo[1] ="1";}
-		respo[2]="0";
-		return(respo);
+			int va = Integer.parseInt(a);
+			int vb = Integer.parseInt(b);
+			int soma = va*vb;
+			int carry = 0;
+			int zero = 0;
+			if(soma > 32767) carry = 1;
+			if(soma == 0) zero = 1;
+			String res = Integer.toBinaryString(soma);
+			res = res.substring((res.length()/2),res.length());
+			String[] resposta = new String[3];
+			resposta[0] = res;
+			resposta[1] = Integer.toString(carry);
+			resposta[2] = Integer.toString(zero);
+			return(resposta);
+	}
+	private static String[] div(String a , String b){
+		int va = Integer.parseInt(a);
+			int vb = Integer.parseInt(b);
+			int soma = va/vb;
+			int carry = 0;
+			int zero = 0;
+			if(soma > 32767) carry = 1;
+			if(soma == 0) zero = 1;
+			String res = Integer.toBinaryString(soma);
+			res = res.substring((res.length()/2),res.length());
+			String[] resposta = new String[3];
+			resposta[0] = res;
+			resposta[1] = Integer.toString(carry);
+			resposta[2] = Integer.toString(zero);
+			return(resposta);
 	}
 	private static String[] sub(String a , String b){ //sub esta errada n sei pq
-		int menos = Integer.parseInt(b,2) * -1;
-		String c = Integer.toBinaryString(menos);
-		b = c.substring(15,32);// saporra faz o complemento de dois automatico soh q fica com tamanho 32
-        String um  ="0000000000000001";	
-		String[] aux = new String[3];
-		aux = add(a,b);	
-		b = aux[0];	
-		return (aux); //soma a+(-b)
+		int va = Integer.parseInt(a);
+			int vb = Integer.parseInt(b);
+			int soma = va-vb;
+			int carry = 0;
+			int zero = 0;
+			if(soma > 32767) carry = 1;
+			if(soma == 0) zero = 1;
+			String res = Integer.toBinaryString(soma);
+			res = res.substring((res.length()/2),res.length());
+			String[] resposta = new String[3];
+			resposta[0] = res;
+			resposta[1] = Integer.toString(carry);
+			resposta[2] = Integer.toString(zero);
+			return(resposta);
 	}
 	private static String[] add(String a , String b){
-		String r ="";
-		int carry = 0;
-		for (int i = a.length()-1; i >= 0 ; i--){
-			if ((Character.getNumericValue(a.charAt(i))+Character.getNumericValue(b.charAt(i))+carry) <= 1){
-				r = r+(Character.getNumericValue(a.charAt(i))+Character.getNumericValue(b.charAt(i))+carry);
-				carry = 0;
-			}
-			else if ((Character.getNumericValue(a.charAt(i))+Character.getNumericValue(b.charAt(i))+carry) == 2){
-				r = r+0;
-				//System.out.println("assasasss "+i);
-				carry = 1;
-			}
-			else if ((Character.getNumericValue(a.charAt(i))+Character.getNumericValue(b.charAt(i))+carry) == 3){
-				r=r+1;
-				carry = 1;
-			}
-		}
-		String ret = new StringBuilder(r).reverse().toString();//faz de trs pra frente a soma e dps inverte pq binario eh da direita pra esquerda , daria pra fazer r = (Character.getNumericValue(a.charAt(i))+Character.getNumericValue(b.charAt(i))+carry)+r mas foda-se;
-		//System.out.println("sasasa "+ret);
-		String of = Integer.toString(carry);
-		String zf = null;
-		if(ret =="0000000000000000") zf = "1";
-		else zf = "0";
-		String[] resp = new String[3];
-		resp[0] = ret;
-		resp[1] = of;
-		resp[2] = zf;
-		return (resp); //resultado +overflow+zeroflag a flag do sinal eh o primeiro bit(se for signed)
+			int va = Integer.parseInt(a);
+			int vb = Integer.parseInt(b);
+			int soma = va+vb;
+			int carry = 0;
+			int zero = 0;
+			if(soma > 32767) carry = 1;
+			if(soma == 0) zero = 1;
+			String res = Integer.toBinaryString(soma);
+			res = res.substring((res.length()/2),res.length());
+			String[] resposta = new String[3];
+			resposta[0] = res;
+			resposta[1] = Integer.toString(carry);
+			resposta[2] = Integer.toString(zero);
+			return(resposta);
 	}
-}
+	private static void cmp(String a, String b){
+		int va = Integer.parseInt(a);
+		int vb = Integer.parseInt(b);
+		if(va == vb) isEqual = true;
+		if(va > vb)isGreater = true;
+		if(va < vb)isLower = true;
+		//mais ops de flags nos jumps
+		System.out.println(isEqual);
+	}
+	private static void resetaflags(){
+	isEqual = false;
+	isGreater = false;
+	isLower = false;
+	}
+	}
 //// inst = 5 bits do opcode+16bits do arg1+16bits do arg2 = 37bits
 /*
  static String[] opCode = { "00001", "00010", "00011", "00100", "00101", "00110", "00111", "01000", "01001", "01010",
