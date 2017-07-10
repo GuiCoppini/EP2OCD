@@ -95,7 +95,6 @@ public class ULA{
 		}//DEC
 		if(opcode.equalsIgnoreCase(Principal.array[7])){
 			cmp(a,b);
-			System.out.println("ISREG "+a+" "+b+" "+isEqual);
 			return(resp);
 		}//CMP
 		if(opcode.equalsIgnoreCase(Principal.array[8])){ //JUMP // jmp e mov sao os unicos com ret
@@ -172,14 +171,13 @@ public class ULA{
 		return(resp);
 	}//faz a div,o dec e o resto dos jumps, ja fiz os primeiros entao ja sabem a logica
 	private static void jmp(String a , String b){ // se tiver uma condicao, ela vai estar em b
-		int valor = (Integer.parseInt(a)-1); //-1 pq o pc vai ser incrementado
+		int valor = (Integer.parseInt(a,2)-1); //-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
 		a = a.substring((a.length()/2),a.length());
 		PC.setPC(a);
 	}
 	private static void je(String a , String b){
-		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
-		System.out.println("AAAAAAAAAAAAAAA "+a);
+		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
 		a = a.substring((a.length()/2),a.length());
 		//if(isEqual == true)
@@ -187,35 +185,35 @@ public class ULA{
 		resetaflags();
 	}
 	public static void jne(String a , String b){
-		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
 		a = a.substring((a.length()/2),a.length());
 		if(isEqual == false)PC.setPC(a);
 		resetaflags();
 	}
 	public static void jg(String a , String b){
-		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
 		a = a.substring((a.length()/2),a.length());
 		if(isGreater == true)PC.setPC(a);
 		resetaflags();
 	}
 	public static void jl(String a , String b){
-		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
 		a = a.substring((a.length()/2),a.length());
 		if(isLower == true)PC.setPC(a);
 		resetaflags();
 	}
 	public static void jge(String a , String b){
-		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
 		a = a.substring((a.length()/2),a.length());
 		if((isEqual == true) || (isGreater == true))PC.setPC(a);
 		resetaflags();
 	}
 	public static void jle(String a , String b){
-		int valor = (Integer.parseInt(a)-1);		//-1 pq o pc vai ser incrementado
+		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
 		a = a.substring((a.length()/2),a.length());
 		if((isEqual == true) || (isLower == true))PC.setPC(a);
@@ -230,7 +228,7 @@ public class ULA{
 		return false;
 	}
 	private static String[] inc(String a , String b){
-			int va = Integer.parseInt(a);
+			int va = Integer.parseInt(a,2);
 			//int vb = Integer.parseInt(b);
 			int soma = va+1;
 			int carry = 0;
@@ -246,7 +244,7 @@ public class ULA{
 			return(resposta);
 	}
 	private static String[] dec(String a , String b){
-			int va = Integer.parseInt(a);
+			int va = Integer.parseInt(a,2);
 			//int vb = Integer.parseInt(b);
 			int soma = va-1;
 			int carry = 0;
@@ -263,8 +261,8 @@ public class ULA{
 	}
 		
 	private static String[] mul(String a , String b){
-			int va = Integer.parseInt(a);
-			int vb = Integer.parseInt(b);
+			int va = Integer.parseInt(a,2);
+			int vb = Integer.parseInt(b,2);
 			int soma = va*vb;
 			int carry = 0;
 			int zero = 0;
@@ -279,8 +277,8 @@ public class ULA{
 			return(resposta);
 	}
 	private static String[] div(String a , String b){
-		int va = Integer.parseInt(a);
-			int vb = Integer.parseInt(b);
+		int va = Integer.parseInt(a,2);
+			int vb = Integer.parseInt(b,2);
 			int soma = va/vb;
 			int carry = 0;
 			int zero = 0;
@@ -295,8 +293,8 @@ public class ULA{
 			return(resposta);
 	}
 	private static String[] sub(String a , String b){ //sub esta errada n sei pq
-		int va = Integer.parseInt(a);
-			int vb = Integer.parseInt(b);
+		int va = Integer.parseInt(a,2);
+			int vb = Integer.parseInt(b,2);
 			int soma = va-vb;
 			int carry = 0;
 			int zero = 0;
@@ -311,8 +309,8 @@ public class ULA{
 			return(resposta);
 	}
 	private static String[] add(String a , String b){
-			int va = Integer.parseInt(a);
-			int vb = Integer.parseInt(b);
+			int va = Integer.parseInt(a,2);
+			int vb = Integer.parseInt(b,2);
 			int soma = va+vb;
 			int carry = 0;
 			int zero = 0;
@@ -327,13 +325,11 @@ public class ULA{
 			return(resposta);
 	}
 	private static void cmp(String a, String b){
-		int va = Integer.parseInt(a);
-		int vb = Integer.parseInt(b);
+		int va = Integer.parseInt(a,2);
+		int vb = Integer.parseInt(b,2);
 		if(va == vb) isEqual = true;
 		if(va > vb)isGreater = true;
 		if(va < vb)isLower = true;
-		//mais ops de flags nos jumps
-		System.out.println(isEqual);
 	}
 	private static void resetaflags(){
 	isEqual = false;
