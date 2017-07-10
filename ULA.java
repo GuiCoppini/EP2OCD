@@ -16,8 +16,6 @@ public class ULA{
 		int bb = Principal.isRegistrador(s.substring(21,37));
 		String a = s.substring(5,21);
 		String b = s.substring(21,37);
-		System.out.println("AAAAAAAAAAAA "+a);
-		System.out.println("BBBBBBBBBBBB "+b);
 		String zero = "0";
 		String um = "1";
 		boolean aisReg = false;
@@ -32,7 +30,7 @@ public class ULA{
 			if(aa == 1)a = Principal.bxx.getBX();
 			if(aa == 2)a = Principal.cxx.getCX();
 			if(aa == 3)a = Principal.dxx.getDX();
-			
+
 		}
 		if( bb!= -1){ // quer dizer q eh um reg
 			bisReg = true;
@@ -43,7 +41,7 @@ public class ULA{
 		}// daqui pra baixo soh temos numeros, nada de registradores, apenas valores
 		if(opcode.equalsIgnoreCase(Principal.array[0])){ //mov
 			if(aa == 0){
-				
+
 				if(bb == 0)b = Principal.axx.getAX();
 				if(bb == 1)b = Principal.bxx.getBX();
 				if(bb == 2)b = Principal.cxx.getCX();
@@ -76,13 +74,13 @@ public class ULA{
 		}
 		if(opcode.equalsIgnoreCase(Principal.array[1])){ //add
 			resp = add(a, b);
-			
+
 		}
 		if(opcode.equalsIgnoreCase(Principal.array[2])){ //sub
 			resp = sub(a, b);
 		}
-	
-		
+
+
 		if(opcode.equalsIgnoreCase(Principal.array[3])){ //MUL
 			resp = mul(a, b);
 		}
@@ -128,7 +126,7 @@ public class ULA{
 			//boolean[] fake =new boolean[]{true,false,false};
 			return(resp);
 		}//JLE
-		if(opcode.equalsIgnoreCase(Principal.array[15])){ 
+		if(opcode.equalsIgnoreCase(Principal.array[15])){
 		boolean x = and(a,b);
 		if(x)resp[0] = "1";
 			return(resp);
@@ -138,10 +136,10 @@ public class ULA{
 		if(x)resp[0] = "1";
 			return(resp);
 		}//or
-	
+
 		if(aisReg){
 			if(aa == 0){
-				
+
 				if(bb == 0)b = Principal.axx.getAX();
 				if(bb == 1)b = Principal.bxx.getBX();
 				if(bb == 2)b = Principal.cxx.getCX();
@@ -169,11 +167,10 @@ public class ULA{
 				if(bb == 3)b = Principal.dxx.getDX();
 				Principal.dxx.setDX(b);
 			}
-			
+
 		}
 		if((aisReg == true)&& (bisReg == false)) {
 				if(aa == 0){
-					System.out.println("ALOOOOO "+resp[0]);
 					Principal.axx.setAX(resp[0]);
 				}
 					if(aa == 1){
@@ -255,10 +252,9 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			if(soma < 0){	
+			if(soma < 0){
 			res = res.substring(25,32);
 			res = "1"+res.substring(0,(res.length()-1));
-			System.out.println("asdasass "+res);
 			}
 			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
@@ -276,10 +272,9 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			if(soma < 0){	
+			if(soma < 0){
 			res = res.substring(25,32);
 			res = "1"+res.substring(0,(res.length()-1));
-			System.out.println("asdasass "+res);
 			}
 			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
@@ -288,7 +283,7 @@ public class ULA{
 			resposta[2] = Integer.toString(zero);
 			return(resposta);
 	}
-		
+
 	private static String[] mul(String a , String b){
 			int va = Integer.parseInt(a,2);
 			int vb = Integer.parseInt(b,2);
@@ -298,10 +293,9 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			if(soma < 0){	
+			if(soma < 0){
 			res = res.substring(25,32);
 			res = "1"+res.substring(0,(res.length()-1));
-			System.out.println("asdasass "+res);
 			}
 			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
@@ -319,10 +313,9 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			if(soma < 0){	
+			if(soma < 0){
 			res = res.substring(25,32);
 			res = "1"+res.substring(0,(res.length()-1));
-			System.out.println("asdasass "+res);
 			}
 			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
@@ -340,10 +333,9 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			if(soma < 0){	
+			if(soma < 0){
 			res = res.substring(25,32);
 			res = "1"+res.substring(0,(res.length()-1));
-			System.out.println("asdasass "+res);
 			}
 			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
@@ -354,23 +346,19 @@ public class ULA{
 	}
 	private static String[] add(String a , String b){
 			int va = Integer.parseInt(a,2);
-			System.out.println("REEEEEEEEEEEEEEEE ");
 			int vb = Integer.parseInt(b,2);
 			int soma = va+vb;
-			System.out.println("soma "+soma);
 			int carry = 0;
 			int zero = 0;
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			if(soma < 0){	
+			if(soma < 0){
 			res = res.substring(25,32);
 			res = "1"+res.substring(0,(res.length()-1));
-			System.out.println("asdasass "+res);
 			}
 			else res = String.format("%16s",res).replace(' ', '0');
 		//	res = res.substring((res.length()/2),res.length());
-			System.out.println("REEEEEEEEEEEEEEEE "+res);
 			String[] resposta = new String[3];
 			resposta[0] = res;
 			resposta[1] = Integer.toString(carry);
