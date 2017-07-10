@@ -16,6 +16,8 @@ public class ULA{
 		int bb = Principal.isRegistrador(s.substring(21,37));
 		String a = s.substring(5,21);
 		String b = s.substring(21,37);
+		System.out.println("AAAAAAAAAAAA "+a);
+		System.out.println("BBBBBBBBBBBB "+b);
 		String zero = "0";
 		String um = "1";
 		boolean aisReg = false;
@@ -167,19 +169,35 @@ public class ULA{
 				if(bb == 3)b = Principal.dxx.getDX();
 				Principal.dxx.setDX(b);
 			}
+			
 		}
+		if((aisReg == true)&& (bisReg == false)) {
+				if(aa == 0){
+					System.out.println("ALOOOOO "+resp[0]);
+					Principal.axx.setAX(resp[0]);
+				}
+					if(aa == 1){
+						Principal.bxx.setBX(resp[0]);
+					}
+						if(aa == 2){
+							Principal.cxx.setCX(resp[0]);
+						}
+							if(aa == 3){
+								Principal.dxx.setDX(resp[0]);
+							}
+			}
 		return(resp);
 	}//faz a div,o dec e o resto dos jumps, ja fiz os primeiros entao ja sabem a logica
 	private static void jmp(String a , String b){ // se tiver uma condicao, ela vai estar em b
 		int valor = (Integer.parseInt(a,2)-1); //-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
-		a = a.substring((a.length()/2),a.length());
+		a = String.format("%16s",a).replace(' ', '0');
 		PC.setPC(a);
 	}
 	private static void je(String a , String b){
 		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
-		a = a.substring((a.length()/2),a.length());
+		a = String.format("%16s",a).replace(' ', '0');
 		//if(isEqual == true)
 		if(isEqual == true)	PC.setPC(a);
 		resetaflags();
@@ -187,21 +205,22 @@ public class ULA{
 	public static void jne(String a , String b){
 		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
-		a = a.substring((a.length()/2),a.length());
+		a = String.format("%16s",a).replace(' ', '0');
 		if(isEqual == false)PC.setPC(a);
 		resetaflags();
 	}
 	public static void jg(String a , String b){
 		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
-		a = a.substring((a.length()/2),a.length());
+		a = String.format("%16s",a).replace(' ', '0');
 		if(isGreater == true)PC.setPC(a);
 		resetaflags();
 	}
 	public static void jl(String a , String b){
 		int valor = (Integer.parseInt(a,2)-1);		//-1 pq o pc vai ser incrementado
 		a = Integer.toBinaryString(valor);
-		a = a.substring((a.length()/2),a.length());
+		//a = a.substring((a.length()/2),a.length());
+		a = String.format("%16s",a).replace(' ', '0');
 		if(isLower == true)PC.setPC(a);
 		resetaflags();
 	}
@@ -236,7 +255,12 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			res = res.substring((res.length()/2),res.length());
+			if(soma < 0){	
+			res = res.substring(25,32);
+			res = "1"+res.substring(0,(res.length()-1));
+			System.out.println("asdasass "+res);
+			}
+			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
 			resposta[0] = res;
 			resposta[1] = Integer.toString(carry);
@@ -252,7 +276,12 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			res = res.substring((res.length()/2),res.length());
+			if(soma < 0){	
+			res = res.substring(25,32);
+			res = "1"+res.substring(0,(res.length()-1));
+			System.out.println("asdasass "+res);
+			}
+			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
 			resposta[0] = res;
 			resposta[1] = Integer.toString(carry);
@@ -269,7 +298,12 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			res = res.substring((res.length()/2),res.length());
+			if(soma < 0){	
+			res = res.substring(25,32);
+			res = "1"+res.substring(0,(res.length()-1));
+			System.out.println("asdasass "+res);
+			}
+			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
 			resposta[0] = res;
 			resposta[1] = Integer.toString(carry);
@@ -285,7 +319,12 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			res = res.substring((res.length()/2),res.length());
+			if(soma < 0){	
+			res = res.substring(25,32);
+			res = "1"+res.substring(0,(res.length()-1));
+			System.out.println("asdasass "+res);
+			}
+			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
 			resposta[0] = res;
 			resposta[1] = Integer.toString(carry);
@@ -301,7 +340,12 @@ public class ULA{
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			res = res.substring((res.length()/2),res.length());
+			if(soma < 0){	
+			res = res.substring(25,32);
+			res = "1"+res.substring(0,(res.length()-1));
+			System.out.println("asdasass "+res);
+			}
+			else res = String.format("%16s",res).replace(' ', '0');
 			String[] resposta = new String[3];
 			resposta[0] = res;
 			resposta[1] = Integer.toString(carry);
@@ -310,14 +354,23 @@ public class ULA{
 	}
 	private static String[] add(String a , String b){
 			int va = Integer.parseInt(a,2);
+			System.out.println("REEEEEEEEEEEEEEEE ");
 			int vb = Integer.parseInt(b,2);
 			int soma = va+vb;
+			System.out.println("soma "+soma);
 			int carry = 0;
 			int zero = 0;
 			if(soma > 32767) carry = 1;
 			if(soma == 0) zero = 1;
 			String res = Integer.toBinaryString(soma);
-			res = res.substring((res.length()/2),res.length());
+			if(soma < 0){	
+			res = res.substring(25,32);
+			res = "1"+res.substring(0,(res.length()-1));
+			System.out.println("asdasass "+res);
+			}
+			else res = String.format("%16s",res).replace(' ', '0');
+		//	res = res.substring((res.length()/2),res.length());
+			System.out.println("REEEEEEEEEEEEEEEE "+res);
 			String[] resposta = new String[3];
 			resposta[0] = res;
 			resposta[1] = Integer.toString(carry);
